@@ -1,0 +1,24 @@
+{
+  "name": "idle-until-render",
+  "version": "0.1.0",
+  "description": "Idle-until-urgent, but for component rendering.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "requestidlecallback",
+    "react",
+    "component",
+    "render"
+  ],
+  "author": "Jeremy L. Wagner <jeremy@jeremy.codes>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-plugin-react": "^7.21.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "rollup": "^2.33.3"
+  }
+}
