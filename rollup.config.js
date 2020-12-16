@@ -1,4 +1,5 @@
 /* eslint-env node */
+
 import babel from "@rollup/plugin-babel";
 import pkg from "./package.json";
 

@@ -2,26 +2,9 @@
   "name": "hydratyr",
   "version": "0.1.0",
   "description": "An idle-until-urgent component hydrator.",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.mjs",
-  "scripts": {
-    "clean": "rm -rf ./dist",
-    "build": "npm run clean && npx rollup -c",
-    "watch": "npm run clean && npx rollup -c -w"
-  },
-  "keywords": [
-    "requestIdleCallback",
-    "idle",
-    "performance",
-    "react",
-    "component",
-    "render"
-  ],
-  "author": "Jeremy L. Wagner <jeremy@jeremy.codes>",
-  "license": "MIT",
-  "files": [
-    "dist"
-  ],
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.mjs",
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-react": "^7.12.10",
@@ -33,5 +16,27 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "rollup": "^2.35.1"
-  }
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && npx rollup -c",
+    "watch": "npm run clean && npx rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malchata/hydratyr.git"
+  },
+  "keywords": [
+    "performance",
+    "react",
+    "idle-until-urgent",
+    "requestidlecallback",
+    "webperf"
+  ],
+  "author": "Jeremy L. Wagner <jeremy@jeremy.codes>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/malchata/hydratyr/issues"
+  },
+  "homepage": "https://github.com/malchata/hydratyr#readme"
 }

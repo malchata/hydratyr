@@ -7,6 +7,7 @@ export class Hydratyr extends React.Component {
   constructor (props) {
     super(props);
 
+    this.idleCallbackSupport = "requestIdleCallback" in window;
     this.isBrowser = typeof window !== "undefined";
     this.callback = props.callback;
     this.callbackArgs = props.callbackArgs || [];
@@ -41,6 +42,10 @@ export class Hydratyr extends React.Component {
     if (this.isBrowser && !this.state.hydrated) {
       this.idleElementObserver = new IntersectionObserver(([ entry ]) => {
         if (entry.isIntersecting || entry.intersectionRatio) {
+          if (this.idleCallbackSupport && typeof this.idleCallback !== "undefined") {
+            cancelIdleCallback(this.idleCallback);
+          }
+
           this.renderCallback();
         }
       });
@@ -57,7 +62,7 @@ export class Hydratyr extends React.Component {
   }
 
   fireIdleCallback () {
-    if (this.isBrowser && "requestIdleCallback" in window) {
+    if (this.isBrowser && this.idleCallbackSupport) {
       this.idleCallback = requestIdleCallback(this.renderCallback);
 
       return;
