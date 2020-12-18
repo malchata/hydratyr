@@ -7,84 +7,84 @@ export class Hydratyr extends React.Component {
   constructor (props) {
     super(props);
 
-    this.idleCallbackSupport = "requestIdleCallback" in window;
     this.isBrowser = typeof window !== "undefined";
-    this.callback = props.callback;
-    this.callbackArgs = props.callbackArgs || [];
+    this.idleCallbackSupport = this.isBrowser && "requestIdleCallback" in window;
     this.state = {
       hydrated: !this.isBrowser
     };
     this.children = props.children;
+    this.wrapper = props.wrapper || "div";
+
+    // The callback to render the component. This may be invoked either in
+    // requestIdleCallback, or within the intersection observer.
+    this.renderCallback = () => {
+      if (!this.state.hydrated) {
+        hydrate(this.children, this.root);
+
+        this.setState({
+          hydrated: true
+        }, () => {
+          // Whether the observer kicks off the rendering or the idle callback
+          // does, it's necessary to run this just in case.
+          this.cleanupObserver();
+        });
+      }
+    };
+
+    this.cleanupObserver = () => {
+      if (this.isBrowser && this.state.hydrated) {
+        this.idleElementObserver.unobserve(this.root);
+        this.idleElementObserver.disconnect();
+      }
+    };
+
+    this.createObserver = () => {
+      if (this.isBrowser && !this.state.hydrated) {
+        this.idleElementObserver = new IntersectionObserver(([ entry ]) => {
+          if ((entry.isIntersecting || entry.intersectionRatio) && !this.state.hydrated) {
+            if (this.idleCallbackSupport && typeof this.idleCallback !== "undefined") {
+              cancelIdleCallback(this.idleCallback);
+            }
+
+            this.renderCallback();
+          }
+        });
+
+        this.idleElementObserver.observe(this.root);
+      }
+    };
+
+    // Creates the idle callback. Also optionally creates the intersection
+    // observer if the idle callback hasn't already immediately ran.
+    this.fireIdleCallback = () => {
+      if (this.idleCallbackSupport) {
+        this.idleCallback = requestIdleCallback(this.renderCallback);
+        this.createObserver();
+
+        return;
+      }
+
+      // Render immediately if requestIdleCallback isn't available
+      this.renderCallback();
+    };
   }
 
   componentDidMount () {
     this.fireIdleCallback();
-    this.createObserver();
-  }
-
-  renderCallback () {
-    if (!this.state.hydrated) {
-      hydrate(this.children, this.idleElementContainer);
-
-      if (typeof this.callback !== "undefined") {
-        this.callback(...this.callbackArgs);
-      }
-
-      this.setState({
-        hydrated: true
-      }, () => {
-        this.cleanupObserver(this.idleElementContainer);
-      });
-    }
-  }
-
-  createObserver () {
-    if (this.isBrowser && !this.state.hydrated) {
-      this.idleElementObserver = new IntersectionObserver(([ entry ]) => {
-        if (entry.isIntersecting || entry.intersectionRatio) {
-          if (this.idleCallbackSupport && typeof this.idleCallback !== "undefined") {
-            cancelIdleCallback(this.idleCallback);
-          }
-
-          this.renderCallback();
-        }
-      });
-
-      this.idleElementObserver.observe(this.idleElementContainer);
-    }
-  }
-
-  cleanupObserver () {
-    if (this.state.hydrated && typeof this.idleElementObserver !== "undefined") {
-      this.idleElementObserver.unobserve(this.idleElementContainer);
-      this.idleElementObserver.disconnect();
-    }
-  }
-
-  fireIdleCallback () {
-    if (this.isBrowser && this.idleCallbackSupport) {
-      this.idleCallback = requestIdleCallback(this.renderCallback);
-
-      return;
-    }
-
-    this.renderCallback();
   }
 
   render (props) {
-    const ElementType = props.wrapper || "div";
+    const ElementType = this.wrapper;
 
-    return (
-      <ElementType dangerouslySetInnerHTML={{}} ref={idleElementContainer => this.idleElementContainer = idleElementContainer}>
-        {this.isBrowser ? "" : this.children}
-      </ElementType>
-    );
+    if (!this.isBrowser) {
+      return <ElementType {...props}>{this.children}</ElementType>;
+    }
+
+    return <ElementType dangerouslySetInnerHTML={{}} ref={root => this.root = root} {...props}></ElementType>;
   }
 }
 
 Hydratyr.propTypes = {
   children: PropTypes.node.isRequired,
-  callback: PropTypes.func,
-  callbackArgs: PropTypes.array,
   wrapper: PropTypes.string
 };

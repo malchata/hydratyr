@@ -28,8 +28,9 @@
   },
   "keywords": [
     "performance",
+    "preact",
     "react",
-    "idle-until-urgent",
+    "idle until urgent",
     "requestidlecallback",
     "webperf"
   ],
