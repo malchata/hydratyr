@@ -89,10 +89,6 @@ export class Hydratyr extends Component {
       return <ElementType {...props}>{this.children}</ElementType>;
     }
 
-    if (!this.observe) {
-      return <ElementType dangerouslySetInnerHTML={{}} {...props}></ElementType>;
-    }
-
     return <ElementType dangerouslySetInnerHTML={{}} ref={root => this.root = root} {...props}></ElementType>;
   }
 }
