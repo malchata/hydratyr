@@ -4,6 +4,7 @@
   <img src="https://raw.githubusercontent.com/malchata/hydratyr/main/readme-images/hydratyr.svg" alt="hydratyr" width="1003.5138" height="263.6973" style="max-width: 100%; height: auto; display: block;">
 </div>
 <br>
+
 hydratyr is a proof-of-concept [Preact](https://preactjs.com/) wrapper component that uses the [idle-until-urgent pattern](https://philipwalton.com/articles/idle-until-urgent/) to hydrate its children. It does this by scheduling an idle callback without a deadline to hydrate the component's children, but registers an intersection observer to immediately hydrate the child component if it is in view (and if the idle callback hasn't already ran).
 
 ## Why?
