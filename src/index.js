@@ -8,11 +8,12 @@ export class Hydratyr extends Component {
 
     this.isBrowser = typeof window !== "undefined";
     this.idleCallbackSupport = this.isBrowser && "requestIdleCallback" in window;
+    this.observe = "observe" in props ? props.observe : true;
+    this.timeout = "timeout" in props ? Number(props.timeout) : undefined;
     this.state = {
       hydrated: !this.isBrowser
     };
     this.children = props.children;
-    this.wrapper = props.wrapper || "div";
 
     // The callback to render the component. This may be invoked either in
     // requestIdleCallback, or within the intersection observer.
@@ -25,7 +26,9 @@ export class Hydratyr extends Component {
         }, () => {
           // Whether the observer kicks off the rendering or the idle callback
           // does, it's necessary to run this just in case.
-          this.cleanupObserver();
+          if (this.observe) {
+            this.cleanupObserver();
+          }
         });
       }
     };
@@ -57,8 +60,15 @@ export class Hydratyr extends Component {
     // observer if the idle callback hasn't already immediately ran.
     this.fireIdleCallback = () => {
       if (this.idleCallbackSupport) {
-        this.idleCallback = requestIdleCallback(this.renderCallback);
-        this.createObserver();
+        if (typeof this.timeout !== undefined) {
+          this.idleCallback = requestIdleCallback(this.renderCallback, this.timeout);
+        } else {
+          this.idleCallback = requestIdleCallback(this.renderCallback);
+        }
+
+        if (this.observe) {
+          this.createObserver();
+        }
 
         return;
       }
@@ -73,10 +83,14 @@ export class Hydratyr extends Component {
   }
 
   render (props) {
-    const ElementType = this.wrapper;
+    const ElementType = props.wrapper || "div";
 
     if (!this.isBrowser) {
       return <ElementType {...props}>{this.children}</ElementType>;
+    }
+
+    if (!this.observe) {
+      return <ElementType dangerouslySetInnerHTML={{}} {...props}></ElementType>;
     }
 
     return <ElementType dangerouslySetInnerHTML={{}} ref={root => this.root = root} {...props}></ElementType>;
@@ -85,5 +99,7 @@ export class Hydratyr extends Component {
 
 Hydratyr.propTypes = {
   children: PropTypes.node.isRequired,
-  wrapper: PropTypes.string
+  wrapper: PropTypes.string,
+  observe: PropTypes.bool,
+  timeout: PropTypes.number
 };

@@ -20,6 +20,7 @@ module.exports = {
     "react"
   ],
   "rules": {
+    "react/react-in-jsx-scope": "off",
     "indent": [
       "error",
       2
