@@ -53,6 +53,7 @@ Some things to think about using this component:
 3. It uses a stateful component. It could probably be rewritten to use hooks and avoid the overhead of a stateful component altogether.
 4. There is some overhead if `observe` is `true` (which is the default). Consider whether it makes sense to disable the observer in some cases.
 5. Layout shifting may occur on hydration. This is something you might have to deal with even if you don't use hydratyr. You may be able to sidestep extra layout work with the [`content-visibility` CSS property](https://web.dev/content-visibility/).
+6. **Not every websites needs to powered by a VDOM library, you knob.**
 
 ## What about React?
 
