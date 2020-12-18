@@ -7,14 +7,14 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@rollup/plugin-babel": "^5.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "eslint": "^7.15.0",
     "eslint-plugin-react": "^7.21.5",
+    "preact": "^10.5.7",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "rollup": "^2.35.1"
   },
   "scripts": {

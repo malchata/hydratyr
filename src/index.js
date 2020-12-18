@@ -1,9 +1,8 @@
 // Vendors
-import React from "react";
-import { hydrate } from "react-dom";
+import { h, hydrate, Component } from "preact";
 import PropTypes from "prop-types";
 
-export class Hydratyr extends React.Component {
+export class Hydratyr extends Component {
   constructor (props) {
     super(props);
 

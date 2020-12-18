@@ -11,8 +11,7 @@ const commonConfig = {
     })
   ],
   external: [
-    "react",
-    "react-dom",
+    "preact",
     "prop-types"
   ]
 };

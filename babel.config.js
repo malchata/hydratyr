@@ -2,7 +2,20 @@
 
 module.exports = {
   presets: [
-    "@babel/preset-react"
+    [
+      "@babel/preset-env", {
+        modules: false,
+        loose: true,
+        targets: {
+          esmodules: true
+        }
+      }
+    ],
+    [
+      "@babel/preset-react", {
+        pragma: "h"
+      }
+    ]
   ],
   plugins: [
     [

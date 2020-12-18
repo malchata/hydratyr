@@ -24,6 +24,12 @@ module.exports = {
       "error",
       2
     ],
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^(h|render|Fragment)$"
+      }
+    ],
     "linebreak-style": [
       "error",
       "unix"
