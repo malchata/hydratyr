@@ -11,8 +11,7 @@ const commonConfig = {
     })
   ],
   external: [
-    "preact",
-    "prop-types"
+    ...Object.keys(pkg.dependencies)
   ]
 };
 
